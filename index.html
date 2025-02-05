@@ -4,92 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Завантаження фото</title>
-
     <style>
-        .photo-container {
-            display: inline-block;
-            margin: 10px;
+        /* Загальні стилі */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Головна секція */
+        .hero-section {
+            background: url('https://via.placeholder.com/1920x800') no-repeat center center/cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
             position: relative;
         }
 
-        .photo {
-            width: 100px;
-            height: 100px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 15px;
+        .hero-content {
+            z-index: 2;
         }
 
-        .photo:hover {
-            transform: scale(1.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        .hero-section h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
         }
 
-        .info {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.7);
+        .hero-section p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            background-color: #007bff;
             color: white;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 14px;
+            padding: 12px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
-        .photo-container.active .info {
-            display: block;
+        .cta-button:hover {
+            background-color: #0056b3;
         }
 
-        /* Модальне вікно */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+        /* Секція завантаження фото */
+        .upload-section {
+            background-color: #fff;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .upload-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .upload-section form {
+            display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            margin: auto;
+        .upload-section input[type="file"] {
+            margin-right: 10px;
+            padding: 10px;
+            font-size: 16px;
         }
 
-        .modal img {
-            width: 100%;
-            height: auto;
+        .upload-section button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-section button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Секція фото */
+        .gallery-section {
+            background-color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .gallery-section h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .image-gallery {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .image-container {
+            margin: 10px;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: scale(1.1);
+            background-color: #f5f5f5;
             border-radius: 10px;
         }
 
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 20px;
+        .image-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
             color: white;
-            font-size: 30px;
-            font-weight: bold;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h2>Список фото:</h2>
-    <div>
-        {% for file in files %}
-            <div class="photo-container" onclick="openModal('{{ url_for('uploaded_file', filename=file) }}')">
-                <img class="photo" src="{{ url_for('uploaded_file', filename=file) }}" alt="{{ file }}">
-                <div class="info">{{ file }}</div>
-            </div>
-        {% endfor %}
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Ласкаво просимо на сайт для завантаження фото!</h1>
+            <p>Легко завантажуйте та переглядайте фото.</p>
+        </div>
     </div>
 
-    <!-- Модальне вікно для великого фото -->
+    <div class="upload-section">
+        <h2>Завантажте фото</h2>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Завантажити</button>
+        </form>
+    </div>
+
+    <div class="gallery-section">
+        <h2>Галерея фото</h2>
+        <div class="image-gallery">
+            {% for file in files %}
+                <div class="image-container" onclick="openModal('{{ url_for('uploaded_file', filename=file) }}')">
+                    <img src="{{ url_for('uploaded_file', filename=file) }}" alt="{{ file }}">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Модальне вікно для перегляду фото -->
     <div id="myModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <div class="modal-content">
@@ -98,7 +177,7 @@
     </div>
 
     <script>
-        // Функція для відкриття модального вікна
+        // Відкриття модального вікна
         function openModal(imageSrc) {
             var modal = document.getElementById("myModal");
             var modalImage = document.getElementById("modalImage");
@@ -106,13 +185,13 @@
             modalImage.src = imageSrc;
         }
 
-        // Функція для закриття модального вікна
+        // Закриття модального вікна
         function closeModal() {
             var modal = document.getElementById("myModal");
             modal.style.display = "none";
         }
 
-        // Закриття модального вікна при натисканні поза межами зображення
+        // Закриття модального вікна при натисканні поза зображенням
         window.onclick = function(event) {
             var modal = document.getElementById("myModal");
             if (event.target == modal) {

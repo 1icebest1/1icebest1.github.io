@@ -18,9 +18,10 @@
             .then(response => response.json())
             .then(images => {
                 let gallery = document.getElementById("gallery");
-                images.forEach(src => {
+                images.forEach(filename => {
                     let img = document.createElement("img");
-                    img.src = src;
+                    img.src = filename;
+                    img.alt = "Зображення";
                     gallery.appendChild(img);
                 });
             })
